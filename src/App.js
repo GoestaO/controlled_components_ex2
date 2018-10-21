@@ -1,26 +1,35 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import ItemList from './components/ItemList';
+import AddItem from './components/AddItem';
+import DeleteItem from './components/DeleteItem';
 
 class App extends React.Component {
   state = {
-    value: '',
-    items: [],
+    items: []
   };
 
   handleChange = event => {
-    this.setState({ value: event.target.value });
+    this.setState({value: event.target.value});
   };
 
-  addItem = event => {
-    event.preventDefault();
+  handleAddItem = item => {
     this.setState(oldState => ({
-      items: [...oldState.items, this.state.value],
+      items: [
+        ...oldState.items,
+        item
+      ]
     }));
   };
 
   deleteLastItem = event => {
-    this.setState(prevState => ({ items: this.state.items.slice(0, -1) }));
+    this.setState(prevState => ({
+      items: this
+        .state
+        .items
+        .slice(0, -1)
+    }));
   };
 
   inputIsEmpty = () => {
@@ -32,33 +41,20 @@ class App extends React.Component {
   };
 
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">ReactND - Coding Practice</h1>
-        </header>
-        <h2>Shopping List</h2>
-        <form onSubmit={this.addItem}>
-          <input
-            type="text"
-            placeholder="Enter New Item"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-          <button disabled={this.inputIsEmpty()}>Add</button>
-        </form>
+    return (<div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo"/>
+        <h1 className="App-title">ReactND - Coding Practice</h1>
+      </header>
 
-        <button onClick={this.deleteLastItem} disabled={this.noItemsFound()}>
-          Delete Last Item
-        </button>
+      <h2>Shopping List</h2>
+      <AddItem onAddItem={this.handleAddItem}/>
 
-        <p className="items">Items</p>
-        <ol className="item-list">
-          {this.state.items.map((item, index) => <li key={index}>{item}</li>)}
-        </ol>
-      </div>
-    );
+      <DeleteItem deleteLastItem={this.deleteLastItem} buttonDisabled={this.noItemsFound()}/>
+
+      <ItemList items={this.state.items}/>
+
+    </div>);
   }
 }
 
